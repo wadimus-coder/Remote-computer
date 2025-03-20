@@ -32,6 +32,28 @@ void exec_data(char *cmd, char *data)
     // printf("%s\n", data);
 }
 
+int get_opcode(struct s_cmd_pack *object)
+{
+    char new_path[100];
+    new_path[0] = 0;
+    int cd = sscanf(object->data, "cd %s", new_path);
+    if (cd)
+    {
+        strcpy(object->data, new_path);
+        return 1;
+    }
+
+    char new_file[100];
+    new_file[0] = 0;
+    int notepad = sscanf(object->data, "notepad %s", new_file);
+    if (notepad)
+    {
+        strcpy(object->data, new_file);
+        return 2;
+    }
+
+    return 0;
+}
 int main()
 {
     /*
@@ -49,7 +71,9 @@ int main()
     printf("%s\n", data);
     return 0;
     */
-    struct s_cmd_pack pack = {0, 3, "dir"};
+    struct s_cmd_pack pack = {0, 0, "cd folder1"};
+    pack.len = strlen(pack.data);
+    pack.opcode = get_opcode(&pack);
     print_pack(&pack);
 }
 
